@@ -29,7 +29,7 @@
 		Global $OFS_CRITRATE    = 0x178 ; Critical Chance
 		Global $OFS_CRITRESIST  = 0x188 ; Critical Resistance
 		Global $OFS_CRITPOWER   = 0x198 ; Crit Damage Multiplier
-	    Global $OFS_ATK1        = 0x1a8 ; Attack Value 1
+		Global $OFS_ATK1        = 0x1a8 ; Attack Value 1
 		Global $OFS_ATK2        = 0x1b8 ; Attack Value 2
 		Global $OFS_DEF1        = 0x1c8 ; Defense Value
 		Global $OFS_IMP         = 0x1d8 ; Impact Value
