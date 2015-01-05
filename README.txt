@@ -28,5 +28,3 @@ DirectX or GDI overlay.
 It is currently being written in the scripting language
 AutoIT for ease of use and fast updates. This also allows it
 to be adapted to meet the end user's needs with little effort.
-
-The following command is used to compile the application:
