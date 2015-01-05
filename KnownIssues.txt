@@ -1,0 +1,1 @@
+- PlayerPointer changes if you swap characters, restarting Tera reverts back to the original pointer.

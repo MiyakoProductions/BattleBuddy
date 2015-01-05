@@ -1,0 +1,14 @@
+This is a collection of the Theory Crafting formulas that will be used.
+This reference is for Theory Crafters and developers alike.
+
+- Theory Crafting Formulas -
+Total Attack = BaseAttack + ExtraAttack
+Extra Attack Percentage = Extra Power * 0.6
+Extra Attack Amount = BaseAttack * (ExtraAttackPercent / 100)
+Attack After Crit = TotalAttack * (CritPower + ExtraCritPower)
+
+DPS = [NoCritDPS*(1-(Crit%/100)) + NoCritDPS*(CritMod*Crit%)]*Bonus%
+(simplified) DPS = Bonus%*NoCritDPS*[1+(CritMod-1)*Crit%]
+Backstab DPS = (DPS * %behind) + NotBehind_DPS * (1 - %behind)
+
+Damage to target before mitigation = ( (unknown) + (0.03 * Power) ) * ( attack + skill damage ) ; Needs confirmation

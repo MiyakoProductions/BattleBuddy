@@ -1,13 +1,5 @@
-        #include <NomadMemory.au3>
-		#include <PlayerStats.au3>
-
-
-		; - Theory Crafting Formulas -
-		; Total Attack = BaseAttack + ExtraAttack
-		; Extra Attack Percentage = Extra Power * 0.6
-		; Extra Attack Amount = BaseAttack * (ExtraAttackPercent / 100)
-		; Attack After Crit = TotalAttack * (CritPower + ExtraCritPower)
-		;
+        #include <lib/NomadMemory.lib>
+		#include <PlayerStats.h>
 
         Global $PID
         Global $sModule = "TERA.exe" ; Module in Memory
@@ -50,50 +42,25 @@
 		 $weakening = _MemoryRead($PlayerStruct + $OFS_RESIST1 ,$openmem, "float")
 		 $periodic = _MemoryRead($PlayerStruct + $OFS_RESIST2 ,$openmem, "float")
 		 $stun = _MemoryRead($PlayerStruct + $OFS_RESIST3 ,$openmem, "float")
+	   ; Calculate HP and MP
+		 $hp = _MemoryRead($PlayerStruct + $OFS_HEALTH1, $openmem)
+		 $maxHP = _MemoryRead($PlayerStruct + $OFS_HEALTH2, $openmem)
+		 $mp = _MemoryRead($PlayerStruct + $OFS_MANA1, $openmem)
+		 $maxMP = _MemoryRead($PlayerStruct + $OFS_MANA2, $openmem)
+       ; Calculate Level
+		 $level = _MemoryRead($PlayerStruct + $OFS_LEVEL, $openmem)
+		
 
 	   ; Display Information
+	   ConsoleWrite("Level: " & $level & @CRLF)
+	   ConsoleWrite("Health: " & $hp & " / " & $maxHP & @CRLF)
+	   ConsoleWrite("Mana: " & $mp & " / " & $maxMP & @CRLF)
 	   ConsoleWrite("Attack: " & $attack & " + " & $attack2 & " (" & $attackPercent & "%) = " & $totalAttack & " - " & $afterCrit & " (Critical x " & $critDamage & ")" & @CRLF)
 	   ConsoleWrite("Defense: " & $defense & " + " & $defense2 & " = " & $totalDefense & @CRLF)
 	   ConsoleWrite("Impact: " & $impact & @CRLF)
 	   ConsoleWrite("Balance: " & $balance & @CRLF)
-	   ConsoleWrite("Resist Weakening: " & $weakening & @CRLF)
-	   ConsoleWrite("Resist Periodic: " & $weakening & @CRLF)
-	   ConsoleWrite("Resist Stun: " & $stun & @CRLF)
 
 	  ; Refresh the thread.
 	  sleep (1000)
 
    WEnd
-
-
-Func _MemoryModuleGetBaseAddress($iPID, $sModule)
-	If Not ProcessExists($iPID) Then Return SetError(1, 0, 0)
-	If Not IsString($sModule) Then Return SetError(2, 0, 0)
-	Local   $PSAPI = DllOpen("psapi.dll")
-	;Get Process Handle
-
-	Local   $hProcess
-	Local   $PERMISSION = BitOR(0x0002, 0x0400, 0x0008, 0x0010, 0x0020) ; CREATE_THREAD, QUERY_INFORMATION, VM_OPERATION, VM_READ, VM_WRITE
-	If $iPID > 0 Then
-		Local $hProcess = DllCall("kernel32.dll", "ptr", "OpenProcess", "dword", $PERMISSION, "int", 0, "dword", $iPID)
-		If $hProcess[0] Then
-			$hProcess = $hProcess[0]
-		EndIf
-	EndIf
-	;EnumProcessModules
-	Local   $Modules = DllStructCreate("ptr[1024]")
-	Local   $aCall = DllCall($PSAPI, "int", "EnumProcessModules", "ptr", $hProcess, "ptr", DllStructGetPtr($Modules), "dword", DllStructGetSize($Modules), "dword*", 0)
-	If $aCall[4] > 0 Then
-		Local   $iModnum = $aCall[4] / 4
-		Local   $aTemp
-		For $i = 1 To $iModnum
-			$aTemp =  DllCall($PSAPI, "dword", "GetModuleBaseNameW", "ptr", $hProcess, "ptr", Ptr(DllStructGetData($Modules, 1, $i)), "wstr", "", "dword", 260)
-			If $aTemp[3] = $sModule Then
-				DllClose($PSAPI)
-				Return Ptr(DllStructGetData($Modules, 1, $i))
-			EndIf
-		Next
-	EndIf
-	DllClose($PSAPI)
-	Return SetError(-1, 0, 0)
-EndFunc
